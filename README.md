@@ -34,3 +34,9 @@ gcloud compute disks list \
   | sort \
   | uniq -c
 ```
+
+## Show all IAM roles
+
+```
+gcloud iam roles list | grep "name:"
+```
