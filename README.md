@@ -40,3 +40,10 @@ gcloud compute disks list \
 ```
 gcloud iam roles list | grep "name:"
 ```
+
+## Show BigQuery public dataset
+
+```
+bq ls bigquery-public-data:
+```
+
