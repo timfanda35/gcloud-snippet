@@ -47,3 +47,9 @@ gcloud iam roles list | grep "name:"
 bq ls bigquery-public-data:
 ```
 
+## List Cloud Monitoring dashboards
+
+```
+gcloud beta monitoring dashboards list --format="value(name, displayName, etag)"
+```
+
