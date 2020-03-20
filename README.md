@@ -53,7 +53,7 @@ bq ls bigquery-public-data:
 gcloud beta monitoring dashboards list --format="value(name, displayName, etag)"
 ```
 
-## Use Python to fix encoding problem
+## Use Python3 to fix encoding problem
 
 ```
 # Use python3
