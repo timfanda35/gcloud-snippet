@@ -53,3 +53,12 @@ bq ls bigquery-public-data:
 gcloud beta monitoring dashboards list --format="value(name, displayName, etag)"
 ```
 
+## Use Python to fix encoding problem
+
+```
+# Use python3
+export CLOUDSDK_PYTHON=python3
+
+# Show Billing Account Name
+gcloud alpha billing accounts list --format='value[separator=","](ACCOUNT_ID,NAME)'
+```
