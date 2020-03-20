@@ -62,3 +62,5 @@ export CLOUDSDK_PYTHON=python3
 # Show Billing Account Name
 gcloud alpha billing accounts list --format='value[separator=","](ACCOUNT_ID,NAME)'
 ```
+
+Ref: https://cloud.google.com/sdk/gcloud/reference/topic/startup
