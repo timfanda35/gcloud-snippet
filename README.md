@@ -78,7 +78,7 @@ OSError: The system cannot find the path specificed
 
 Root cause:
 
-Cloud SDK and gsutil defualt use Python 2.7 and Python 2.7 does not support Winwos registry "LongPathsEnabled".
+Cloud SDK and gsutil default use Python 2.7 and Python 2.7 does not support Winwos registry "LongPathsEnabled".
 
 Solution:
 1. Install [python3.6+](https://www.python.org/downloads/windows/)
