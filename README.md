@@ -90,6 +90,6 @@ Solution:
 ```
 
 Ref: 
-https://stackoverflow.com/questions/46488118/win32-long-paths-from-python
-https://cloud.google.com/sdk/gcloud/reference/topic/startup
-https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/
+- https://stackoverflow.com/questions/46488118/win32-long-paths-from-python
+- https://cloud.google.com/sdk/gcloud/reference/topic/startup
+- https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/
