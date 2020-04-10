@@ -64,3 +64,32 @@ gcloud alpha billing accounts list --format='value[separator=","](ACCOUNT_ID,NAM
 ```
 
 Ref: https://cloud.google.com/sdk/gcloud/reference/topic/startup
+
+## Use Python3 to fix Windows Long Path problem
+
+Problem:
+
+There's a file path exceed 260 characters: "F:\path_very_long_and_exceed260char\file.txt".
+
+```
+> gsutil cp -r F:\Data gs://BUCKET_NAME/Data
+OSError: The system cannot find the path specificed
+```
+
+Root cause:
+
+Cloud SDK and gsutil defualt use Python 2.7 and Python 2.7 does not support Winwos registry "LongPathsEnabled".
+
+Solution:
+1. Install [python3.6+](https://www.python.org/downloads/windows/)
+2. Set the environment variable: `CLOUDSDK_GSUTIL_PYTHON`
+3. Run gsutil command in Powershell:
+```
+> $Env:CLOUDSDK_GSUTIL_PYTHON="py"
+> gsutil cp -r F:\Data gs://BUCKET_NAME/Data
+```
+
+Ref: 
+https://stackoverflow.com/questions/46488118/win32-long-paths-from-python
+https://cloud.google.com/sdk/gcloud/reference/topic/startup
+https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/
