@@ -93,3 +93,13 @@ Ref:
 - https://stackoverflow.com/questions/46488118/win32-long-paths-from-python
 - https://cloud.google.com/sdk/gcloud/reference/topic/startup
 - https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/
+
+## Show dynamic routes destination ranges of Cloud Router
+
+```
+gcloud compute routers get-status ${CLOUD_ROUTER} \
+  --region=${REGION}
+  --format="value(result.bestRoutes.destRange)" \
+  | tr ";" "\n" \
+  | sort
+```
