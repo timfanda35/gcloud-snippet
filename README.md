@@ -98,7 +98,7 @@ Ref:
 
 ```
 gcloud compute routers get-status ${CLOUD_ROUTER} \
-  --region=${REGION}
+  --region=${REGION} \
   --format="value(result.bestRoutes.destRange)" \
   | tr ";" "\n" \
   | sort
