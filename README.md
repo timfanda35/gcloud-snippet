@@ -104,7 +104,7 @@ gcloud compute routers get-status ${CLOUD_ROUTER} \
   | sort
 ```
 
-## List bigquery query jobs' totalByresBilled
+## List bigquery query jobs' totalBytesBilled
 
 Install Dependency in Cloud Shell
 
