@@ -103,3 +103,26 @@ gcloud compute routers get-status ${CLOUD_ROUTER} \
   | tr ";" "\n" \
   | sort
 ```
+
+## List bigquery query jobs' totalByresBilled
+
+Install Dependency in Cloud Shell
+
+```
+sudo apt-get install gawk
+```
+
+Format output and export as csv file
+
+```
+bq ls -j -a --format=prettyjson -n 5000 \
+  | jq -r '.[] | .statistics.startTime + "," + .id + "," + .user_email + "," +.statistics.query.totalBytesBilled' \
+  | awk -F',' '{ printf "%s, %s, %s, %.2fGB\n", strftime("%Y-%m-%d %H:%M:%S", $1/1000), $2, $3, $4/1024/1024/1024; }' \
+  > output.csv
+```
+
+columns:
+- startTime, convert time format from timestamp(millisecond) to "%Y-%m-%d %H:%M:%S"
+- job_id
+- user_email
+- totalBytesBilled, convert B to GB
