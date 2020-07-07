@@ -126,3 +126,15 @@ columns:
 - job_id
 - user_email
 - totalBytesBilled, convert B to GB
+
+
+## List User Role assignments
+
+```
+gcloud organizations get-iam-policy <ORGANIZATION_ID> \
+  --filter="bindings.members:<TEST-USER@GMAIL.COM>" \
+  --flatten="bindings[].members" \
+  --format="table(bindings.role)" > roles.txt
+```
+
+Reference: https://blog.doit-intl.com/view-gcp-user-role-assignments-2241373529f1
