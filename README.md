@@ -138,3 +138,23 @@ gcloud organizations get-iam-policy <ORGANIZATION_ID> \
 ```
 
 Reference: https://blog.doit-intl.com/view-gcp-user-role-assignments-2241373529f1
+
+## Copy roles to another user
+
+This script adds IAM policy binding from user user1@example.com to user user2@example.com in the project.
+
+```
+SOURCE_USER="user:user1@example.com"
+TARGET_USER="user:user2@example.com"
+PROJECT_ID=<PROJECT_ID>
+
+ROLES=($(gcloud projects get-iam-policy $PROJECT_ID --flatten=bindings --filter="bindings.members=($SOURCE_USER)" --format="value[delimiter=' '](bindings.role)"))
+for role in ${ROLES[@]}; do
+  echo "grant $TARGET_USER with $role"
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+    -q \
+    --member=$TARGET_USER \
+    --role=$role \
+    > /dev/null
+done
+```
