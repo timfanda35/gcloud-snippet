@@ -125,6 +125,16 @@ gcloud compute disks list \
   | uniq -c
 ```
 
+### Delete os-login profile all ssh-keys
+
+```
+myArray=$(gcloud compute os-login ssh-keys list --format='value(key)')
+
+for str in ${myArray[@]}; do
+  gcloud compute os-login ssh-keys remove --key=$str
+done
+```
+
 ## BigQuery
 
 ### Show BigQuery public dataset
