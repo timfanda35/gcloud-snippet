@@ -2,58 +2,21 @@
 
 Note of Google Cloud SDK.
 
-## Use `-q` to avoid inactive prompt when delete resources.
+## Common
+
+### Use `-q` to avoid inactive prompt when delete resources.
 
 ```
 gcloud iam service-accounts delete -q ${SERVICE_ACCOUNT_EMAIL}
 ```
 
-## List compute instances with network tags
+### Impersonate as a service account
 
 ```
-gcloud compute instances list \
-  --format="table[box](name, tags.items.flatten())" \
-  --sort-by="name"
+gcloud --impersonate-service-account=${SERVICE_ACCOUNT_EMAIL} compute instances list
 ```
 
-## Count by disk types
-
-```
-gcloud compute instances list \
-  --filter="status=running" \
-  --format="value(machine_type.basename())" \
-  | sort \
-  | uniq -c
-```
-
-## Count by disk size
-
-```
-gcloud compute disks list \
-  --format="value(size_gb)" \
-  | sort \
-  | uniq -c
-```
-
-## Show all IAM roles
-
-```
-gcloud iam roles list | grep "name:"
-```
-
-## Show BigQuery public dataset
-
-```
-bq ls bigquery-public-data:
-```
-
-## List Cloud Monitoring dashboards
-
-```
-gcloud beta monitoring dashboards list --format="value(name, displayName, etag)"
-```
-
-## Use Python3 to fix encoding problem
+### Use Python3 to fix encoding problem
 
 ```
 # Use python3
@@ -65,7 +28,7 @@ gcloud alpha billing accounts list --format='value[separator=","](ACCOUNT_ID,NAM
 
 Ref: https://cloud.google.com/sdk/gcloud/reference/topic/startup
 
-## Use Python3 to fix Windows Long Path problem
+### Use Python3 to fix Windows Long Path problem
 
 Problem:
 
@@ -94,17 +57,83 @@ Ref:
 - https://cloud.google.com/sdk/gcloud/reference/topic/startup
 - https://www.howtogeek.com/266621/how-to-make-windows-10-accept-file-paths-over-260-characters/
 
-## Show dynamic routes destination ranges of Cloud Router
+
+## IAM
+
+### Show all IAM roles
 
 ```
-gcloud compute routers get-status ${CLOUD_ROUTER} \
-  --region=${REGION} \
-  --format="value(result.bestRoutes.destRange)" \
-  | tr ";" "\n" \
-  | sort
+gcloud iam roles list | grep "name:"
 ```
 
-## List bigquery query jobs' totalBytesBilled
+### List User Role assignments
+
+```
+gcloud organizations get-iam-policy <ORGANIZATION_ID> \
+  --filter="bindings.members:<TEST-USER@GMAIL.COM>" \
+  --flatten="bindings[].members" \
+  --format="table(bindings.role)" > roles.txt
+```
+
+Reference: https://blog.doit-intl.com/view-gcp-user-role-assignments-2241373529f1
+
+### Copy roles to another user
+
+This script adds IAM policy binding from user user1@example.com to user user2@example.com in the project.
+
+```
+SOURCE_USER="user:user1@example.com"
+TARGET_USER="user:user2@example.com"
+PROJECT_ID=<PROJECT_ID>
+
+ROLES=($(gcloud projects get-iam-policy $PROJECT_ID --flatten=bindings --filter="bindings.members=($SOURCE_USER)" --format="value[delimiter=' '](bindings.role)"))
+for role in ${ROLES[@]}; do
+  echo "grant $TARGET_USER with $role"
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+    -q \
+    --member=$TARGET_USER \
+    --role=$role \
+    > /dev/null
+done
+```
+
+## Compute
+### List compute instances with network tags
+
+```
+gcloud compute instances list \
+  --format="table[box](name, tags.items.flatten())" \
+  --sort-by="name"
+```
+
+### Count by disk types
+
+```
+gcloud compute instances list \
+  --filter="status=running" \
+  --format="value(machine_type.basename())" \
+  | sort \
+  | uniq -c
+```
+
+### Count by disk size
+
+```
+gcloud compute disks list \
+  --format="value(size_gb)" \
+  | sort \
+  | uniq -c
+```
+
+## BigQuery
+
+### Show BigQuery public dataset
+
+```
+bq ls bigquery-public-data:
+```
+
+### List bigquery query jobs' totalBytesBilled
 
 Install Dependency in Cloud Shell
 
@@ -127,34 +156,22 @@ columns:
 - user_email
 - totalBytesBilled, convert B to GB
 
+## Monitoring
 
-## List User Role assignments
-
-```
-gcloud organizations get-iam-policy <ORGANIZATION_ID> \
-  --filter="bindings.members:<TEST-USER@GMAIL.COM>" \
-  --flatten="bindings[].members" \
-  --format="table(bindings.role)" > roles.txt
-```
-
-Reference: https://blog.doit-intl.com/view-gcp-user-role-assignments-2241373529f1
-
-## Copy roles to another user
-
-This script adds IAM policy binding from user user1@example.com to user user2@example.com in the project.
+### List Cloud Monitoring dashboards
 
 ```
-SOURCE_USER="user:user1@example.com"
-TARGET_USER="user:user2@example.com"
-PROJECT_ID=<PROJECT_ID>
+gcloud beta monitoring dashboards list --format="value(name, displayName, etag)"
+```
 
-ROLES=($(gcloud projects get-iam-policy $PROJECT_ID --flatten=bindings --filter="bindings.members=($SOURCE_USER)" --format="value[delimiter=' '](bindings.role)"))
-for role in ${ROLES[@]}; do
-  echo "grant $TARGET_USER with $role"
-  gcloud projects add-iam-policy-binding $PROJECT_ID \
-    -q \
-    --member=$TARGET_USER \
-    --role=$role \
-    > /dev/null
-done
+## Network
+
+### Show dynamic routes destination ranges of Cloud Router
+
+```
+gcloud compute routers get-status ${CLOUD_ROUTER} \
+  --region=${REGION} \
+  --format="value(result.bestRoutes.destRange)" \
+  | tr ";" "\n" \
+  | sort
 ```
