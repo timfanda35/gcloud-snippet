@@ -99,6 +99,21 @@ for role in ${ROLES[@]}; do
 done
 ```
 
+### Copy custom role to another project
+
+```
+SOURCE_PROJECT_ID=<PROJECT_A_ID>
+TARGET_PROJECT_ID=<PROJECT_B_ID>
+ROLE_ID=<ROLE_ID> # Remeber remove prefix: projects/<PROJECT_ID>/roles/
+
+gcloud iam roles describe --project=$SOURCE_PROJECT_ID $ROLE_ID > $ROLE_ID.yml
+
+sed -i '/^etag/d' $ROLE_ID.yml
+sed -i '/^name/d' $ROLE_ID.yml
+
+gcloud iam roles create $ROLE_ID --project=$TARGET_PROJECT_ID --file=$ROLE_ID.yml
+```
+
 ## Compute
 ### List compute instances with network tags
 
