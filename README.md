@@ -84,12 +84,14 @@ This script adds IAM policy binding from user user1@example.com to user user2@ex
 ```
 SOURCE_USER="user:user1@example.com"
 TARGET_USER="user:user2@example.com"
-PROJECT_ID=<PROJECT_ID>
+SOURCE_PROJECT_ID=<PROJECT_A_ID>
+TARGET_PROJECT_ID=<PROJECT_B_ID>
 
-ROLES=($(gcloud projects get-iam-policy $PROJECT_ID --flatten=bindings --filter="bindings.members=($SOURCE_USER)" --format="value[delimiter=' '](bindings.role)"))
+ROLES=($(gcloud projects get-iam-policy $SOURCE_PROJECT_ID --flatten=bindings --filter="bindings.members=($SOURCE_USER)" --format="value[delimiter=' '](bindings.role)"))
 for role in ${ROLES[@]}; do
+  role=${role//$SOURCE_PROJECT_ID/$TARGET_PROJECT_ID}
   echo "grant $TARGET_USER with $role"
-  gcloud projects add-iam-policy-binding $PROJECT_ID \
+  gcloud projects add-iam-policy-binding $TARGET_PROJECT_ID \
     -q \
     --member=$TARGET_USER \
     --role=$role \
